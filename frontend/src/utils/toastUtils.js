@@ -1,0 +1,25 @@
+import { toast } from 'react-toastify'
+
+export const showSuccess = (message) => {
+
+    toast.success(message)
+
+}
+
+export const showError = (message) => {
+
+    toast.error(message, { toastId: `error:${message}` })
+
+}
+
+export const showWarning = (message) => {
+
+    toast.warning(message)
+
+}
+
+export const showInfo = (message) => {
+
+    toast.info(message)
+
+}
