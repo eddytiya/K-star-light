@@ -14,20 +14,23 @@ const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('admin-session-expired', expired)
   }, [])
 
-  const value = useMemo(() => ({
-    admin,
-    login: async (email, password) => {
-      const { data } = await apiClient.post('/auth/login', { email, password })
-      localStorage.setItem('adminToken', data.token)
-      localStorage.setItem('adminProfile', JSON.stringify(data.admin))
-      setAdmin(data.admin)
-    },
-    logout: () => {
-      localStorage.removeItem('adminToken')
-      localStorage.removeItem('adminProfile')
-      setAdmin(null)
-    }
-  }), [admin])
+  const value = useMemo(
+    () => ({
+      admin,
+      login: async (email, password) => {
+        const { data } = await apiClient.post('/auth/login', { email, password })
+        localStorage.setItem('adminToken', data.token)
+        localStorage.setItem('adminProfile', JSON.stringify(data.admin))
+        setAdmin(data.admin)
+      },
+      logout: () => {
+        localStorage.removeItem('adminToken')
+        localStorage.removeItem('adminProfile')
+        setAdmin(null)
+      }
+    }),
+    [admin]
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

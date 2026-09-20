@@ -22,28 +22,114 @@ const CustomerLogin = () => {
   }
   const submit = async (event) => {
     event.preventDefault()
-    if (form.email.trim().toLowerCase() === ownerEmail) { navigate('/admin/login', { state: { email: ownerEmail } }); return }
+    if (form.email.trim().toLowerCase() === ownerEmail) {
+      navigate('/admin/login', { state: { email: ownerEmail } })
+      return
+    }
     setBusy(true)
     try {
-      const { data } = await apiClient.post(`/customer-auth/${register ? 'register' : 'login'}`, form)
+      const { data } = await apiClient.post(
+        `/customer-auth/${register ? 'register' : 'login'}`,
+        form
+      )
       showSuccess(register ? 'Account created' : 'Welcome back')
       finish(data)
-    } catch (error) { if (error.response?.data?.adminRedirect) navigate('/admin/login', { state: { email: ownerEmail } }); else showError(error.response?.data?.message || 'Could not sign in') }
-    finally { setBusy(false) }
+    } catch (error) {
+      if (error.response?.data?.adminRedirect)
+        navigate('/admin/login', { state: { email: ownerEmail } })
+      else showError(error.response?.data?.message || 'Could not sign in')
+    } finally {
+      setBusy(false)
+    }
   }
   const googleSignIn = async (credential) => {
     setBusy(true)
-    try { const { data } = await apiClient.post('/customer-auth/google', { credential }); showSuccess('Signed in with Google'); finish(data) }
-    catch (error) { if (error.response?.data?.adminRedirect) navigate('/admin/login', { state: { email: ownerEmail } }); else showError(error.response?.data?.message || 'Google sign-in failed') }
-    finally { setBusy(false) }
+    try {
+      const { data } = await apiClient.post('/customer-auth/google', { credential })
+      showSuccess('Signed in with Google')
+      finish(data)
+    } catch (error) {
+      if (error.response?.data?.adminRedirect)
+        navigate('/admin/login', { state: { email: ownerEmail } })
+      else showError(error.response?.data?.message || 'Google sign-in failed')
+    } finally {
+      setBusy(false)
+    }
   }
-  return <><PublicNav /><main className="customer-auth"><form onSubmit={submit}><Link className="brand" to="/"><span>K</span> STAR LIGHT</Link><h1>{register ? 'Create account' : 'Welcome back'}</h1><p>Sign in to see orders linked to your verified email. You can also check out as a guest.</p>
-    <GoogleButton onCredential={googleSignIn} text={register ? 'signup_with' : 'signin_with'} />
-    <div className="auth-divider">or use email</div>
-    {register && <><label>Name<input required autoComplete="name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label><label>Phone<input autoComplete="tel" inputMode="numeric" pattern="[6-9][0-9]{9}" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label></>}
-    <label>Email<input required type="email" autoComplete="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label><label>Password<input required type="password" autoComplete={register ? 'new-password' : 'current-password'} minLength={register ? 8 : undefined} value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} /></label><button disabled={busy}>{busy ? 'Please wait…' : register ? 'Create account' : 'Sign in'}</button>
-    <p className="switch-auth">{register ? 'Already have an account?' : 'New customer?'} <button type="button" onClick={() => setRegister(!register)}>{register ? 'Sign in' : 'Create account'}</button></p>
-  </form></main></>
+  return (
+    <>
+      <PublicNav />
+      <main className="customer-auth">
+        <form onSubmit={submit}>
+          <Link className="brand" to="/">
+            <span>K</span> STAR LIGHT
+          </Link>
+          <h1>{register ? 'Create account' : 'Welcome back'}</h1>
+          <p>
+            Sign in to see orders linked to your verified email. You can also check out as a guest.
+          </p>
+          <GoogleButton
+            onCredential={googleSignIn}
+            text={register ? 'signup_with' : 'signin_with'}
+          />
+          <div className="auth-divider">or use email</div>
+          {register && (
+            <>
+              <label>
+                Name
+                <input
+                  required
+                  autoComplete="name"
+                  value={form.name}
+                  onChange={(event) => setForm({ ...form, name: event.target.value })}
+                />
+              </label>
+              <label>
+                Phone
+                <input
+                  autoComplete="tel"
+                  inputMode="numeric"
+                  pattern="[6-9][0-9]{9}"
+                  value={form.phone}
+                  onChange={(event) => setForm({ ...form, phone: event.target.value })}
+                />
+              </label>
+            </>
+          )}
+          <label>
+            Email
+            <input
+              required
+              type="email"
+              autoComplete="email"
+              value={form.email}
+              onChange={(event) => setForm({ ...form, email: event.target.value })}
+            />
+          </label>
+          <label>
+            Password
+            <input
+              required
+              type="password"
+              autoComplete={register ? 'new-password' : 'current-password'}
+              minLength={register ? 8 : undefined}
+              value={form.password}
+              onChange={(event) => setForm({ ...form, password: event.target.value })}
+            />
+          </label>
+          <button disabled={busy}>
+            {busy ? 'Please wait…' : register ? 'Create account' : 'Sign in'}
+          </button>
+          <p className="switch-auth">
+            {register ? 'Already have an account?' : 'New customer?'}{' '}
+            <button type="button" onClick={() => setRegister(!register)}>
+              {register ? 'Sign in' : 'Create account'}
+            </button>
+          </p>
+        </form>
+      </main>
+    </>
+  )
 }
 
 export default CustomerLogin

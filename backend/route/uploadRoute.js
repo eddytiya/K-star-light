@@ -16,23 +16,37 @@ const useS3 = Boolean(process.env.AWS_S3_BUCKET && process.env.AWS_REGION);
 const upload = multer({
     storage: useS3 ? multer.memoryStorage() : diskStorage,
     limits: { fileSize: 5 * 1024 * 1024, files: 6 },
-    fileFilter: (_req, file, callback) => callback(null, ['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype))
+    fileFilter: (_req, file, callback) =>
+        callback(null, ['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype))
 });
 
 const router = express.Router();
 router.post('/', adminAuth, upload.array('images', 6), async (req, res) => {
     if (useS3) {
         const s3 = new S3Client({ region: process.env.AWS_REGION });
-        const images = await Promise.all(req.files.map(async (file) => {
-            const key = `products/${randomUUID()}${path.extname(file.originalname).toLowerCase()}`;
-            await s3.send(new PutObjectCommand({ Bucket: process.env.AWS_S3_BUCKET, Key: key, Body: file.buffer, ContentType: file.mimetype }));
-            const baseUrl = process.env.AWS_CDN_URL || `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com`;
-            return `${baseUrl.replace(/\/$/, '')}/${key}`;
-        }));
+        const images = await Promise.all(
+            req.files.map(async (file) => {
+                const key = `products/${randomUUID()}${path.extname(file.originalname).toLowerCase()}`;
+                await s3.send(
+                    new PutObjectCommand({
+                        Bucket: process.env.AWS_S3_BUCKET,
+                        Key: key,
+                        Body: file.buffer,
+                        ContentType: file.mimetype
+                    })
+                );
+                const baseUrl =
+                    process.env.AWS_CDN_URL ||
+                    `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com`;
+                return `${baseUrl.replace(/\/$/, '')}/${key}`;
+            })
+        );
         return res.status(201).json({ images });
     }
     const origin = `${req.protocol}://${req.get('host')}`;
-    return res.status(201).json({ images: req.files.map((file) => `${origin}/uploads/${file.filename}`) });
+    return res
+        .status(201)
+        .json({ images: req.files.map((file) => `${origin}/uploads/${file.filename}`) });
 });
 
 module.exports = router;

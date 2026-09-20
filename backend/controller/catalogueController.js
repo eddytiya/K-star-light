@@ -17,7 +17,18 @@ const publicProduct = (product) => {
 const getCatalogue = async (req, res) => {
     try {
         const query = { status: 'published' };
-        const { q, category, wattage, colour, usage, fitting, brightness, minPrice, maxPrice, featured } = req.query;
+        const {
+            q,
+            category,
+            wattage,
+            colour,
+            usage,
+            fitting,
+            brightness,
+            minPrice,
+            maxPrice,
+            featured
+        } = req.query;
 
         if (q?.trim()) {
             const search = new RegExp(escapeRegex(q.trim()), 'i');
@@ -54,13 +65,21 @@ const getCatalogue = async (req, res) => {
         const limit = Math.min(Math.max(Number(req.query.limit) || 24, 1), 50);
         const page = Math.max(Number.parseInt(req.query.page, 10) || 1, 1);
 
-        const [products, total] = await Promise.all([Product.find(query)
-            .populate('category', 'name slug')
-            .sort(sort)
-            .skip((page - 1) * limit)
-            .limit(limit), Product.countDocuments(query)]);
+        const [products, total] = await Promise.all([
+            Product.find(query)
+                .populate('category', 'name slug')
+                .sort(sort)
+                .skip((page - 1) * limit)
+                .limit(limit),
+            Product.countDocuments(query)
+        ]);
 
-        return res.status(200).json({ products: products.map(publicProduct), total, page, pages: Math.ceil(total / limit) });
+        return res.status(200).json({
+            products: products.map(publicProduct),
+            total,
+            page,
+            pages: Math.ceil(total / limit)
+        });
     } catch (_error) {
         return res.status(500).json({ message: 'Could not load catalogue' });
     }
@@ -68,8 +87,10 @@ const getCatalogue = async (req, res) => {
 
 const getCatalogueProduct = async (req, res) => {
     try {
-        const product = await Product.findOne({ slug: req.params.slug, status: 'published' })
-            .populate('category', 'name slug');
+        const product = await Product.findOne({
+            slug: req.params.slug,
+            status: 'published'
+        }).populate('category', 'name slug');
         return product
             ? res.status(200).json(publicProduct(product))
             : res.status(404).json({ message: 'Product not found' });

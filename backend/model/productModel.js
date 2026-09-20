@@ -71,13 +71,15 @@ const productSchema = new mongoose.Schema(
             min: 0,
             default: 5
         },
-        inventoryHistory: [{
-            previousQuantity: { type: Number, required: true },
-            newQuantity: { type: Number, required: true },
-            change: { type: Number, required: true },
-            note: { type: String, trim: true, default: 'Stock updated' },
-            createdAt: { type: Date, default: Date.now }
-        }],
+        inventoryHistory: [
+            {
+                previousQuantity: { type: Number, required: true },
+                newQuantity: { type: Number, required: true },
+                change: { type: Number, required: true },
+                note: { type: String, trim: true, default: 'Stock updated' },
+                createdAt: { type: Date, default: Date.now }
+            }
+        ],
         featured: { type: Boolean, default: false },
         status: {
             type: String,

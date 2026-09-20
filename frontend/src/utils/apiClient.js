@@ -13,7 +13,11 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 && error.config?.headers?.Authorization === `Bearer ${localStorage.getItem('adminToken')}` && localStorage.getItem('adminToken')) {
+    if (
+      error.response?.status === 401 &&
+      error.config?.headers?.Authorization === `Bearer ${localStorage.getItem('adminToken')}` &&
+      localStorage.getItem('adminToken')
+    ) {
       localStorage.removeItem('adminToken')
       localStorage.removeItem('adminProfile')
       window.dispatchEvent(new Event('admin-session-expired'))

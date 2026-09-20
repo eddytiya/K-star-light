@@ -1,5 +1,10 @@
 const express = require('express');
-const { createEnquiry, getEnquiries, updateEnquiry, deleteEnquiry } = require('../controller/enquiryController');
+const {
+    createEnquiry,
+    getEnquiries,
+    updateEnquiry,
+    deleteEnquiry
+} = require('../controller/enquiryController');
 const adminAuth = require('../middleware/adminAuth');
 const router = express.Router();
 router.post('/', createEnquiry);

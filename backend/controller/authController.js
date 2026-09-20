@@ -5,7 +5,7 @@ const Admin = require('../model/adminModel');
 const login = async (req, res) => {
     try {
         const admin = await Admin.findOne({ email: req.body.email?.trim().toLowerCase() });
-        if (!admin || !await bcrypt.compare(req.body.password || '', admin.passwordHash)) {
+        if (!admin || !(await bcrypt.compare(req.body.password || '', admin.passwordHash))) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
         const token = jwt.sign(

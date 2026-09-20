@@ -12,14 +12,9 @@ const adminAuth = require('../middleware/adminAuth');
 const router = express.Router();
 router.use(adminAuth);
 
-router.route('/')
-    .post(createProduct)
-    .get(getProducts);
+router.route('/').post(createProduct).get(getProducts);
 
-router.route('/:id')
-    .get(getProduct)
-    .put(updateProduct)
-    .delete(deleteProduct);
+router.route('/:id').get(getProduct).put(updateProduct).delete(deleteProduct);
 router.put('/:id/stock', adjustStock);
 
 module.exports = router;

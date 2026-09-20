@@ -23,12 +23,51 @@ const AdminNav = () => {
     localStorage.setItem('theme', next)
     document.documentElement.dataset.theme = next
   }
-  return <header className="admin-nav">
-    <NavLink className="admin-brand" to="/admin" onClick={() => setMenuOpen(false)}><span className="admin-brand-mark">K</span><span>STAR LIGHT <small>ADMIN</small></span></NavLink>
-    <button className="admin-menu-button" type="button" aria-label={menuOpen ? 'Close admin menu' : 'Open admin menu'} aria-expanded={menuOpen} aria-controls="admin-navigation" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? 'Close' : 'Menu'}</button>
-    <nav id="admin-navigation" className={menuOpen ? 'open' : ''} aria-label="Admin navigation">{links.map(([path, label]) => <NavLink key={path} to={path} end={path === '/admin'} onClick={() => setMenuOpen(false)}>{label}</NavLink>)}<NavLink to="/" onClick={() => setMenuOpen(false)}>View site ↗</NavLink></nav>
-    <div className="admin-nav-actions"><button className="admin-theme" type="button" onClick={toggleTheme}>{theme === 'light' ? '☾ Dark' : '☀ Light'}</button><button className="admin-logout" type="button" onClick={() => { logout(); navigate('/') }}>Sign out<span>{admin?.name}</span></button></div>
-  </header>
+  return (
+    <header className="admin-nav">
+      <NavLink className="admin-brand" to="/admin" onClick={() => setMenuOpen(false)}>
+        <span className="admin-brand-mark">K</span>
+        <span>
+          STAR LIGHT <small>ADMIN</small>
+        </span>
+      </NavLink>
+      <button
+        className="admin-menu-button"
+        type="button"
+        aria-label={menuOpen ? 'Close admin menu' : 'Open admin menu'}
+        aria-expanded={menuOpen}
+        aria-controls="admin-navigation"
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        {menuOpen ? 'Close' : 'Menu'}
+      </button>
+      <nav id="admin-navigation" className={menuOpen ? 'open' : ''} aria-label="Admin navigation">
+        {links.map(([path, label]) => (
+          <NavLink key={path} to={path} end={path === '/admin'} onClick={() => setMenuOpen(false)}>
+            {label}
+          </NavLink>
+        ))}
+        <NavLink to="/" onClick={() => setMenuOpen(false)}>
+          View site ↗
+        </NavLink>
+      </nav>
+      <div className="admin-nav-actions">
+        <button className="admin-theme" type="button" onClick={toggleTheme}>
+          {theme === 'light' ? '☾ Dark' : '☀ Light'}
+        </button>
+        <button
+          className="admin-logout"
+          type="button"
+          onClick={() => {
+            logout()
+            navigate('/')
+          }}
+        >
+          Sign out<span>{admin?.name}</span>
+        </button>
+      </div>
+    </header>
+  )
 }
 
 export default AdminNav

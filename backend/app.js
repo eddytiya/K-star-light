@@ -25,7 +25,15 @@ app.use(
     })
 );
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
-app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: 'draft-8', legacyHeaders: false }));
+app.use(
+    '/api',
+    rateLimit({
+        windowMs: 15 * 60 * 1000,
+        limit: 300,
+        standardHeaders: 'draft-8',
+        legacyHeaders: false
+    })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,9 +54,11 @@ app.use('/api/customer-auth', customerAuthRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/manual-orders', manualOrderRoute);
 app.use('/api/customer-records', customerRecordsRoute);
+app.use('/api/reports', require('./route/reportRoute'));
 
 app.use((error, _req, res, _next) => {
-    if (error instanceof require('multer').MulterError) return res.status(400).json({ message: error.message });
+    if (error instanceof require('multer').MulterError)
+        return res.status(400).json({ message: error.message });
     return res.status(500).json({ message: 'Unexpected server error' });
 });
 

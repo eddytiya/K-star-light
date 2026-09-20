@@ -1,6 +1,10 @@
 const router = require('express').Router();
 const adminAuth = require('../middleware/adminAuth');
-const { getManualOrders, saveManualOrder, deleteManualOrder } = require('../controller/manualOrderController');
+const {
+    getManualOrders,
+    saveManualOrder,
+    deleteManualOrder
+} = require('../controller/manualOrderController');
 
 router.use(adminAuth);
 router.get('/', getManualOrders);

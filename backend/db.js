@@ -8,7 +8,7 @@ const connectDB = async () => {
         console.log('MongoDB connected');
         if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
             const email = process.env.ADMIN_EMAIL.toLowerCase();
-            if (!await Admin.exists({ email })) {
+            if (!(await Admin.exists({ email }))) {
                 await Admin.create({
                     name: process.env.ADMIN_NAME || 'K Star Light Admin',
                     email,

@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 const Category = require('../model/categoryModel');
 const Product = require('../model/productModel');
 
-const slugify = (value) => value
-    .toString()
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+const slugify = (value) =>
+    value
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
 
 const uniqueSlug = async (name, excludedId) => {
     const base = slugify(name) || 'category';
@@ -50,10 +51,12 @@ const createCategory = async (req, res) => {
 const getCategories = async (_req, res) => {
     try {
         const categories = await Category.find().sort({ name: 1 }).lean();
-        const withCounts = await Promise.all(categories.map(async (category) => ({
-            ...category,
-            productCount: await Product.countDocuments({ category: category._id })
-        })));
+        const withCounts = await Promise.all(
+            categories.map(async (category) => ({
+                ...category,
+                productCount: await Product.countDocuments({ category: category._id })
+            }))
+        );
         return res.status(200).json(withCounts);
     } catch (error) {
         return sendError(res, error);

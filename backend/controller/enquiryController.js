@@ -4,7 +4,10 @@ const Product = require('../model/productModel');
 
 const createEnquiry = async (req, res) => {
     try {
-        if (!mongoose.isValidObjectId(req.body.product) || !await Product.exists({ _id: req.body.product, status: 'published' })) {
+        if (
+            !mongoose.isValidObjectId(req.body.product) ||
+            !(await Product.exists({ _id: req.body.product, status: 'published' }))
+        ) {
             return res.status(400).json({ message: 'Please select a valid published product' });
         }
         const enquiry = await Enquiry.create(req.body);
@@ -31,13 +34,19 @@ const getEnquiries = async (req, res) => {
 
 const updateEnquiry = async (req, res) => {
     try {
-        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: 'Invalid enquiry id' });
+        if (!mongoose.isValidObjectId(req.params.id))
+            return res.status(400).json({ message: 'Invalid enquiry id' });
         const update = {};
         if (req.body.status !== undefined) update.status = req.body.status;
         if (req.body.quotedTotal !== undefined) update.quotedTotal = req.body.quotedTotal;
         if (req.body.quoteNote !== undefined) update.quoteNote = req.body.quoteNote;
-        const enquiry = await Enquiry.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: true });
-        return enquiry ? res.status(200).json(enquiry) : res.status(404).json({ message: 'Enquiry not found' });
+        const enquiry = await Enquiry.findByIdAndUpdate(req.params.id, update, {
+            new: true,
+            runValidators: true
+        });
+        return enquiry
+            ? res.status(200).json(enquiry)
+            : res.status(404).json({ message: 'Enquiry not found' });
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }
@@ -45,9 +54,12 @@ const updateEnquiry = async (req, res) => {
 
 const deleteEnquiry = async (req, res) => {
     try {
-        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: 'Invalid enquiry id' });
+        if (!mongoose.isValidObjectId(req.params.id))
+            return res.status(400).json({ message: 'Invalid enquiry id' });
         const enquiry = await Enquiry.findByIdAndDelete(req.params.id);
-        return enquiry ? res.status(200).json({ message: 'Enquiry deleted' }) : res.status(404).json({ message: 'Enquiry not found' });
+        return enquiry
+            ? res.status(200).json({ message: 'Enquiry deleted' })
+            : res.status(404).json({ message: 'Enquiry not found' });
     } catch (_error) {
         return res.status(500).json({ message: 'Could not delete enquiry' });
     }

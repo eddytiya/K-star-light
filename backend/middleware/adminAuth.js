@@ -8,7 +8,8 @@ module.exports = (req, res, next) => {
 
     try {
         req.admin = jwt.verify(token, process.env.JWT_SECRET);
-        if (req.admin.role !== 'admin') return res.status(403).json({ message: 'Admin access only' });
+        if (req.admin.role !== 'admin')
+            return res.status(403).json({ message: 'Admin access only' });
         return next();
     } catch (_error) {
         return res.status(401).json({ message: 'Your admin session has expired' });

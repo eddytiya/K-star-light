@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 const Product = require('../model/productModel');
 const Category = require('../model/categoryModel');
 
-const slugify = (value) => value
-    .toString()
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+const slugify = (value) =>
+    value
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
 
 const createUniqueSlug = async (name, excludedId) => {
     const baseSlug = slugify(name) || 'product';
@@ -39,7 +40,10 @@ const sendError = (res, error) => {
 
 const createProduct = async (req, res) => {
     try {
-        if (!mongoose.isValidObjectId(req.body.category) || !await Category.exists({ _id: req.body.category })) {
+        if (
+            !mongoose.isValidObjectId(req.body.category) ||
+            !(await Category.exists({ _id: req.body.category }))
+        ) {
             return res.status(400).json({ message: 'Please select a valid category' });
         }
         const product = await Product.create({
@@ -55,7 +59,9 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (_req, res) => {
     try {
-        const products = await Product.find().populate('category', 'name slug').sort({ createdAt: -1 });
+        const products = await Product.find()
+            .populate('category', 'name slug')
+            .sort({ createdAt: -1 });
         return res.status(200).json(products);
     } catch (error) {
         return sendError(res, error);
@@ -89,10 +95,11 @@ const updateProduct = async (req, res) => {
         }
 
         const update = { ...req.body };
-        if (update.category && (
-            !mongoose.isValidObjectId(update.category)
-            || !await Category.exists({ _id: update.category })
-        )) {
+        if (
+            update.category &&
+            (!mongoose.isValidObjectId(update.category) ||
+                !(await Category.exists({ _id: update.category })))
+        ) {
             return res.status(400).json({ message: 'Please select a valid category' });
         }
         if (update.name && update.name !== existingProduct.name) {
@@ -100,7 +107,10 @@ const updateProduct = async (req, res) => {
         } else {
             delete update.slug;
         }
-        if (update.stockQuantity !== undefined && Number(update.stockQuantity) !== existingProduct.stockQuantity) {
+        if (
+            update.stockQuantity !== undefined &&
+            Number(update.stockQuantity) !== existingProduct.stockQuantity
+        ) {
             const nextQuantity = Number(update.stockQuantity);
             update.$push = {
                 inventoryHistory: {
@@ -126,12 +136,15 @@ const updateProduct = async (req, res) => {
 
 const adjustStock = async (req, res) => {
     try {
-        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: 'Invalid product id' });
+        if (!mongoose.isValidObjectId(req.params.id))
+            return res.status(400).json({ message: 'Invalid product id' });
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
         const nextQuantity = Number(req.body.stockQuantity);
         if (!Number.isInteger(nextQuantity) || nextQuantity < 0) {
-            return res.status(400).json({ message: 'Stock quantity must be a non-negative whole number' });
+            return res
+                .status(400)
+                .json({ message: 'Stock quantity must be a non-negative whole number' });
         }
         product.inventoryHistory.push({
             previousQuantity: product.stockQuantity,

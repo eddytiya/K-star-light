@@ -38,18 +38,126 @@ const App = () => (
       <Route path="/account" element={<CustomerAccount />} />
       <Route path="/quote/:id" element={<QuotePage />} />
       <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin" element={<ProtectedRoute><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/products" element={<ProtectedRoute><AdminLayout><ProductList /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/products/new" element={<ProtectedRoute><AdminLayout><ProductForm /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/products/:id" element={<ProtectedRoute><AdminLayout><ProductDetails /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/products/:id/edit" element={<ProtectedRoute><AdminLayout><ProductForm /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/categories" element={<ProtectedRoute><AdminLayout><CategoryList /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/categories/new" element={<ProtectedRoute><AdminLayout><CategoryForm /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/categories/:id/edit" element={<ProtectedRoute><AdminLayout><CategoryForm /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/enquiries" element={<ProtectedRoute><AdminLayout><EnquiryList /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/orders" element={<ProtectedRoute><AdminLayout><OrderList /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/manual-orders" element={<ProtectedRoute><AdminLayout><ManualOrders /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/customers" element={<ProtectedRoute><AdminLayout><CustomerRecords /></AdminLayout></ProtectedRoute>} />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/products"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductList />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/products/new"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductForm />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/products/:id"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductDetails />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/products/:id/edit"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductForm />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/categories"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <CategoryList />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/categories/new"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <CategoryForm />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/categories/:id/edit"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <CategoryForm />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/enquiries"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <EnquiryList />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/orders"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <OrderList />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/manual-orders"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ManualOrders />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/customers"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <CustomerRecords />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
       <Route path="/products" element={<Navigate to="/admin/products" replace />} />
       <Route path="/categories" element={<Navigate to="/admin/categories" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
